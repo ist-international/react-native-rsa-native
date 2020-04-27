@@ -368,4 +368,37 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return keyData;
 }
 
+- (BOOL)hasPublicKey:(NSString *)keyTag {
+    NSData *tag = [keyTag dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *getquery = @{ (id)kSecClass: (id)kSecClassKey,
+                                (id)kSecAttrApplicationTag: tag,
+                                (id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
+                                (id)kSecReturnRef: @YES,
+                                };
+
+    SecKeyRef key = NULL;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)getquery,
+                                          (CFTypeRef *)&key);
+    if (status == errSecItemNotFound) {
+        return NO;
+    }
+
+    if (status == errSecSuccess) {
+        CFRelease(key);
+        return YES
+    } 
+
+    NSLog(@"error testing for key existance");
+    
+    NSString* ErrMsg = (__bridge_transfer NSString *) SecCopyErrorMessageString(status, NULL);
+    // Create the exception.
+    NSException *exception = [NSException
+        exceptionWithName:@"HasPublicKeyException"
+        reason:ErrMsg
+        userInfo:nil];
+
+    // Throw the exception.
+    @throw exception;
+}
+
 @end

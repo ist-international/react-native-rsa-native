@@ -308,4 +308,19 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
       }
     });
   }
+
+  @ReactMethod
+  public void hasPublicKey(final String keyTag, final Promise promise) {
+    AsyncTask.execute(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          RSA rsa = new RSA(keyTag);
+          promise.resolve(rsa.hasPublicKey());
+        } catch (Exception e) {
+          promise.reject("Error", e.getMessage());
+        }
+      }
+    });
+  }
 }

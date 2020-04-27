@@ -99,6 +99,10 @@ public class RSA {
         return dataToPem(PUBLIC_HEADER, pkcs1PublicKey);
     }
 
+    public boolean hasPublicKey() throws IOException {
+        return this.publicKey != null;
+    }
+
     public String getPrivateKey() throws IOException {
         byte[] pkcs1PrivateKey = privateKeyToPkcs1(this.privateKey);
 

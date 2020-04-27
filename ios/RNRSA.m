@@ -272,4 +272,16 @@ RCT_EXPORT_METHOD(getPublicKey:(NSString *)keyTag resolve:(RCTPromiseResolveBloc
     resolve(key);
 }
 
+RCT_EXPORT_METHOD(hasPublicKey:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+    @try {
+        BOOL has = [rsa hasPublicKey];
+        resolve(has);
+    }
+    @catch (NSException *exception) {
+        reject(@"failed", @"Failed to test for public key existance", exception)
+    }
+}
+
 @end
