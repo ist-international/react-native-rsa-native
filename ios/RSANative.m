@@ -32,10 +32,10 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
         privateKeyAttributes[(id)kSecAttrApplicationTag] = tag;
     }
 
-	NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init]; 
+	NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     [attributes setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
     [attributes setObject:[NSNumber numberWithInt:keySize] forKey:(__bridge id)kSecAttrKeySizeInBits];
-	[attributes setObject:privateKeyAttributes forKey:(__bridge id)kSecPrivateKeyAttrs]; 
+	[attributes setObject:privateKeyAttributes forKey:(__bridge id)kSecPrivateKeyAttrs];
 
     CFErrorRef error = NULL;
     SecKeyRef privateKey = SecKeyCreateRandomKey((__bridge CFDictionaryRef)attributes, &error);
@@ -253,7 +253,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
               NSLog(@"error: %@", err);
             }
         }
-        
+
         encodedSignature = [signature base64EncodedStringWithOptions: encodeOption];
     };
 
@@ -359,12 +359,12 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (NSData *)dataForKey:(SecKeyRef)key {
     CFErrorRef error = NULL;
     NSData * keyData = (NSData *)CFBridgingRelease(SecKeyCopyExternalRepresentation(key, &error));
-    
+
     if (!keyData) {
         NSError *err = CFBridgingRelease(error);
         NSLog(@"%@", err);
     }
-    
+
     return keyData;
 }
 
@@ -385,12 +385,14 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
     if (status == errSecSuccess) {
         CFRelease(key);
-        return YES
-    } 
+        return YES;
+    }
 
     NSLog(@"error testing for key existance");
-    
+
+    // TODO: Fix warning: "'SecCopyErrorMessageString' is only available on iOS 11.3 or newer"
     NSString* ErrMsg = (__bridge_transfer NSString *) SecCopyErrorMessageString(status, NULL);
+
     // Create the exception.
     NSException *exception = [NSException
         exceptionWithName:@"HasPublicKeyException"

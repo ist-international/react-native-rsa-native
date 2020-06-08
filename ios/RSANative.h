@@ -39,4 +39,6 @@
 - (NSString *)_sign:(NSData *)messageBytes;
 - (BOOL)_verify:(NSData *)signatureBytes withMessage:(NSData *)messageBytes;
 
+- (BOOL)hasPublicKey:(NSString *)keyTag;
+
 @end

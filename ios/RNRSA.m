@@ -275,12 +275,14 @@ RCT_EXPORT_METHOD(getPublicKey:(NSString *)keyTag resolve:(RCTPromiseResolveBloc
 RCT_EXPORT_METHOD(hasPublicKey:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+
     @try {
-        BOOL has = [rsa hasPublicKey];
-        resolve(has);
+        BOOL hasPublicKey = [rsa hasPublicKey:(keyTag)];
+        resolve(hasPublicKey ? @YES : @NO);
     }
     @catch (NSException *exception) {
-        reject(@"failed", @"Failed to test for public key existance", exception)
+         // TODO: Fix warning: "Incompatible pointer types passing 'NSException *' to parameter of type 'NSError *'"
+         reject(@"failed", @"Failed to test for public key existance", exception);
     }
 }
 
